@@ -237,7 +237,7 @@ export function ComponentConfigSchema() {
 
 			/**
 			 * Footer component displayed at the bottom of each documentation page.
-			 * The default implementation displays `<LastUpdated />`, `<Pagination />`, and `<EditLink />`.
+			 * The default implementation displays `<LastUpdated />`, `<Pagination />`, `<EditLink />`, and `<Comment />`.
 			 *
 			 * @see {@link https://github.com/withastro/starlight/blob/main/packages/starlight/components/Footer.astro `Footer` default implementation}
 			 */
@@ -260,6 +260,12 @@ export function ComponentConfigSchema() {
 			 * @see {@link https://github.com/withastro/starlight/blob/main/packages/starlight/components/EditLink.astro `EditLink` default implementation}
 			 */
 			EditLink: z.string().default('@astrojs/starlight/components/EditLink.astro'),
+			/**
+			 * Component rendered in the page footer to display comments.
+			 *
+			 * @see {@link https://github.com/withastro/starlight/blob/main/packages/starlight/components/Comment.astro `Comment` default implementation}
+			 */
+			Comment: z.string().default('@astrojs/starlight/components/Comment.astro'),
 		})
 		.prefault({});
 }
