@@ -1,5 +1,8 @@
 ---
+const { entry } = Astro.locals.starlightRoute;
+import config from 'virtual:starlight/user-config';
 
+const showComment = entry.data.comment ?? config.comment;
 ---
 
-<div>Comment</div>
+{showComment && <div>Comment</div>}

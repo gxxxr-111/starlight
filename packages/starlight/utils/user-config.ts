@@ -178,6 +178,9 @@ const UserConfigSchema = z.object({
 	/** Define if the last update date should be visible in the page footer. */
 	lastUpdated: z.boolean().default(false),
 
+	/** Define if comments should be visible in the page footer. */
+	comment: z.boolean().default(false),
+
 	/** Define if the previous and next page links should be visible in the page footer. */
 	pagination: z.boolean().default(true),
 
