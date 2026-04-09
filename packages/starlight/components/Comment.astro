@@ -1,0 +1,102 @@
+---
+const { entry } = Astro.locals.starlightRoute;
+import config from 'virtual:starlight/user-config';
+
+const showComment = entry.data.comment ?? config.comment;
+
+if (showComment && !config.giscus) {
+	throw new Error(
+		'Giscus configuration is required when comment is enabled. Please add `giscus` to your starlight config.'
+	);
+}
+
+const giscusConfig = config.giscus;
+const lang = giscusConfig.lang ?? 'en';
+
+const repo = giscusConfig.repo;
+const repoId = giscusConfig.repoId;
+const category = giscusConfig.category;
+const categoryId = giscusConfig.categoryId;
+const mapping = giscusConfig.mapping ?? 'pathname';
+const strict = giscusConfig.strict ?? '0';
+const reactionsEnabled = giscusConfig.reactionsEnabled ?? '1';
+const emitMetadata = giscusConfig.emitMetadata ?? '0';
+const inputPosition = giscusConfig.inputPosition ?? 'bottom';
+---
+
+{
+	showComment && (
+		<section class="giscus-wrapper mx-auto mt-10 w-full">
+			<div
+				id="giscus-container"
+				data-repo={repo}
+				data-repo-id={repoId}
+				data-category={category}
+				data-category-id={categoryId}
+				data-mapping={mapping}
+				data-strict={strict}
+				data-reactions-enabled={reactionsEnabled}
+				data-emit-metadata={emitMetadata}
+				data-input-position={inputPosition}
+				data-lang={lang}
+			/>
+		</section>
+	)
+}
+
+<script>
+	function getGiscusTheme() {
+		const theme = document.documentElement.getAttribute('data-theme') || 'light';
+		return theme === 'dark' ? 'dark' : 'light';
+	}
+
+	function loadGiscus() {
+		const container = document.querySelector('#giscus-container');
+		if (!container) return;
+
+		const repo = container.getAttribute('data-repo');
+		const repoId = container.getAttribute('data-repo-id');
+		const category = container.getAttribute('data-category');
+		const categoryId = container.getAttribute('data-category-id');
+		const mapping = container.getAttribute('data-mapping');
+		const strict = container.getAttribute('data-strict');
+		const reactionsEnabled = container.getAttribute('data-reactions-enabled');
+		const emitMetadata = container.getAttribute('data-emit-metadata');
+		const inputPosition = container.getAttribute('data-input-position');
+		const lang = container.getAttribute('data-lang');
+
+		const oldScript = document.querySelector('script[src*="giscus"]');
+		if (oldScript) oldScript.remove();
+
+		const script = document.createElement('script');
+		script.src = 'https://giscus.app/client.js';
+
+		script.setAttribute('data-repo', repo);
+		script.setAttribute('data-repo-id', repoId);
+		script.setAttribute('data-category', category);
+		script.setAttribute('data-category-id', categoryId);
+		script.setAttribute('data-mapping', mapping);
+		script.setAttribute('data-strict', strict);
+		script.setAttribute('data-reactions-enabled', reactionsEnabled);
+		script.setAttribute('data-emit-metadata', emitMetadata);
+		script.setAttribute('data-input-position', inputPosition);
+		script.setAttribute('data-theme', getGiscusTheme());
+		script.setAttribute('data-lang', lang);
+		script.crossOrigin = 'anonymous';
+		script.async = true;
+
+		container.appendChild(script);
+	}
+
+	loadGiscus();
+
+	const observer = new MutationObserver(() => {
+		const theme = getGiscusTheme();
+		const iframe = document.querySelector('iframe.giscus-frame');
+		if (iframe) {
+			iframe.contentWindow?.postMessage({ giscus: { setConfig: { theme } } }, 'https://giscus.app');
+		}
+	});
+
+	observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+</script>

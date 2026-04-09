@@ -147,3 +147,8 @@ declare module 'virtual:starlight/components/TwoColumnContent' {
 	const TwoColumnContent: typeof import('./components/TwoColumnContent.astro').default;
 	export default TwoColumnContent;
 }
+
+declare module 'virtual:starlight/components/Comment' {
+	const Comment: typeof import('./components/Comment.astro').default;
+	export default Comment;
+}

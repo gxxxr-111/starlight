@@ -178,6 +178,38 @@ const UserConfigSchema = z.object({
 	/** Define if the last update date should be visible in the page footer. */
 	lastUpdated: z.boolean().default(false),
 
+	/** Define if comments should be visible in the page footer. */
+	comment: z.boolean().default(false),
+
+	/**
+	 * Configure Giscus comments.
+	 * Only used when `comment` is set to `true`.
+	 */
+	giscus: z
+		.object({
+			/** The GitHub repository where comments will be displayed. */
+			repo: z.string().min(1, 'Giscus `repo` must not be empty.'),
+			/** The GitHub repository ID. */
+			repoId: z.string().min(1, 'Giscus `repoId` must not be empty.'),
+			/** The category name where discussions will be created. */
+			category: z.string().min(1, 'Giscus `category` must not be empty.'),
+			/** The category ID where discussions will be created. */
+			categoryId: z.string().min(1, 'Giscus `categoryId` must not be empty.'),
+			/** The mapping between content and discussions. Defaults to `'pathname'`. */
+			mapping: z.enum(['pathname', 'url', 'title', 'og:title']).default('pathname'),
+			/** Whether to use strict mode. Defaults to `'0'`. */
+			strict: z.union([z.string(), z.number()]).default(0),
+			/** Whether to enable reactions. Defaults to `1`. */
+			reactionsEnabled: z.union([z.string(), z.number(), z.boolean()]).default(true),
+			/** Whether to emit metadata. Defaults to `0`. */
+			emitMetadata: z.union([z.string(), z.number()]).default(0),
+			/** Input position for comments. Defaults to `'bottom'`. */
+			inputPosition: z.enum(['top', 'bottom']).default('bottom'),
+			/** The language of the Giscus UI. Defaults to `'en'`. */
+			lang: z.string().default('en'),
+		})
+		.optional(),
+
 	/** Define if the previous and next page links should be visible in the page footer. */
 	pagination: z.boolean().default(true),
 
@@ -346,3 +378,4 @@ export const StarlightConfigSchema = z
 
 export type StarlightConfig = z.infer<typeof StarlightConfigSchema>;
 export type StarlightUserConfig = z.input<typeof StarlightConfigSchema>;
+export type GiscusConfig = z.infer<typeof UserConfigSchema.shape.giscus>;
