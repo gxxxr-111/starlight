@@ -51,6 +51,12 @@ const StarlightFrontmatterSchema = (context: SchemaContext) =>
 		lastUpdated: z.union([z.date(), z.boolean()]).optional(),
 
 		/**
+		 * Display comments on this page.
+		 * Overrides the `comment` global config.
+		 */
+		comment: z.boolean().optional(),
+
+		/**
 		 * The previous navigation link configuration.
 		 * Overrides the `pagination` global config or the link text and/or URL.
 		 */
